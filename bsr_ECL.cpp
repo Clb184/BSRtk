@@ -28,11 +28,12 @@ void readIns(Clb::file& file)
 	bool useMap;
 
 	file.getff(&cmd, 1);
-	while(cmd)
+	for(int i = 0 ; cmd; i++)
 	{
 		file.setPos(file.getPos() - 1);
 		temp = file.getString();
 		std::cout << "#ptnconst \"" << temp << "\"\n";
+		std::cout << "#define " << "ptn" << i << " " << i << "\n";
 		file.getff(&cmd, 1);
 	}
 	std::cout << "\n";
@@ -121,7 +122,7 @@ void readIns(Clb::file& file)
 			B
 			break;
 		case 0x0b:
-			DW
+			LAB(4)
 			break;
 		case 0x0c:
 			break;
@@ -205,6 +206,8 @@ void readIns(Clb::file& file)
 			break;
 		case 0x38:
 			break;
+		case 0x39:
+			break;
 		case 0x3a:
 			break;
 		case 0x3b:
@@ -235,6 +238,8 @@ void readIns(Clb::file& file)
 		case 0x48:
 			break;
 		case 0x49:
+			break;
+		case 0x4a:
 			break;
 		case 0x4b:
 			break;
@@ -373,7 +378,7 @@ void readIns(Clb::file& file)
 		case 0x8e:
 			break;
 		case 0x90:
-			DW
+			SUB(4)
 			break;
 		case 0x91:
 			break;
@@ -547,6 +552,7 @@ void getAddress(Clb::file& file)
 #define IN 	DW
 
 #define F DW
+#define H DW
 
 #define STR file.getString();
 #define SUB(x) file.getff(&dpar0, 4);\
@@ -596,7 +602,7 @@ void getAddress(Clb::file& file)
 			B
 			break;
 		case 0x0b:
-			DW
+			LAB(4)
 			break;
 		case 0x0c:
 			break;
@@ -680,6 +686,8 @@ void getAddress(Clb::file& file)
 			break;
 		case 0x38:
 			break;
+		case 0x39:
+			break;
 		case 0x3a://GreatEq?
 			break;
 		case 0x3b:
@@ -709,6 +717,8 @@ void getAddress(Clb::file& file)
 		case 0x48:
 			break;
 		case 0x49:
+			break;
+		case 0x4a:
 			break;
 		case 0x4b:
 			break;
@@ -849,7 +859,7 @@ void getAddress(Clb::file& file)
 		case 0x8e:
 			break;
 		case 0x90:
-			DW
+			SUB(4)
 				break;
 		case 0x91:
 			break;
@@ -896,7 +906,7 @@ void getAddress(Clb::file& file)
 			B
 				break;
 		case 0xa5:
-			W C W
+			DW
 				//if (dpar0 > 0xffffff00)
 					//std::cout << (float)dpar0 << "f";
 				//else

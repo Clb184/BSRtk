@@ -130,7 +130,9 @@ else \
 exit(-1);}
 
 
-#define findVar2(g, hogehoge, s )if (Clb::getInt(hogehoge, &g, s)) {}\
+#define findVar2(g, hogehoge, s )if (hogehoge == "PI") { float p = 3.1415926535897932384626433832795; \
+memcpy(&g, &p, 4); } \
+else if(Clb::getInt(hogehoge, &g, s)) {} \
 else if (Clb::getFloat(hogehoge, (float&)g)) {}\
 else if (LocalConstInt.find(hogehoge) != LocalConstInt.end())\
 g = LocalConstInt[hogehoge];\

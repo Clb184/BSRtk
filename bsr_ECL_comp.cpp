@@ -294,14 +294,17 @@ void CReadIns(Clb::file& file, Clb::file& out)
 					file.fSkip();
 					file.setFSkip(&ECLFormat);
 					temp = file.getString();
-					if (Clb::getInt(temp, &tInt, 4))
+					file.setFSkip(&isBlankSpace);
+					file.fSkip();
+					tempN = file.getString();
+					if (Clb::getInt(tempN, &tInt, 4))
 					{
 						if (onSub)
 							LocalConstInt.insert({ temp, tInt });
 						else
 							GlobalConstInt.insert({ temp, tInt });
 					}
-					else if (Clb::getFloat(temp, tFloat))
+					else if (Clb::getFloat(tempN, tFloat))
 					{
 						if (onSub)
 							LocalConstFloat.insert({ temp, tFloat });
@@ -309,11 +312,11 @@ void CReadIns(Clb::file& file, Clb::file& out)
 							GlobalConstFloat.insert({ temp, tFloat });
 					}
 					//To do: Define a constant as another constant
-					//else if (LocalConstInt.find(temp) != LocalConstInt.end())
+					//else if (LocalConstInt.find(tempN) != LocalConstInt.end())
 					//{
 					//
 					//}
-					//else if (LocalConstFloat.find(temp) != LocalConstFloat.end())
+					//else if (LocalConstFloat.find(tempN) != LocalConstFloat.end())
 					//{
 					//
 					//}
@@ -439,7 +442,7 @@ void CReadIns(Clb::file& file, Clb::file& out)
 					B
 						break;
 				case 0x0b:
-					DW
+					LAB
 						break;
 				case 0x0c:
 					break;
@@ -523,6 +526,8 @@ void CReadIns(Clb::file& file, Clb::file& out)
 					break;
 				case 0x38:
 					break;
+				case 0x39:
+					break;
 				case 0x3a:
 					break;
 				case 0x3b:
@@ -553,6 +558,8 @@ void CReadIns(Clb::file& file, Clb::file& out)
 				case 0x48:
 					break;
 				case 0x49:
+					break;
+				case 0x4a:
 					break;
 				case 0x4b:
 					break;
@@ -698,7 +705,7 @@ void CReadIns(Clb::file& file, Clb::file& out)
 				case 0x8e:
 					break;
 				case 0x90:
-					DW
+					SUB
 						break;
 				case 0x91:
 					break;
@@ -963,6 +970,9 @@ void CGetAddress(Clb::file& file)
 						file.fSkip();
 						file.setFSkip(&ECLFormat);
 						temp = file.getString();
+						file.setFSkip(&isBlankSpace);
+						file.fSkip();
+						tempN = file.getString();
 						//if (Clb::getInt(temp, &tInt, 4))
 						//{
 						//	if(onSub)
@@ -1069,12 +1079,19 @@ void CGetAddress(Clb::file& file)
 					if (file.getCurrentChar() == '{')
 					{
 						file.movePos(1);
-						tempSbr.address = pos;
-						vLablContainer.insert({subName, tempSbr});
-						if(isConst)
+						if (vLablContainer.find(subName) == vLablContainer.end())
 						{
-							vConstSubr.insert({ subName, pos });
-							isConst = false;
+							tempSbr.address = pos;
+							vLablContainer.insert({ subName, tempSbr });
+							if (isConst)
+							{
+								vConstSubr.insert({ subName, pos });
+								isConst = false;
+							}
+						}
+						else
+						{
+							SCLCOMP_ERROR("Duplicated Subroutine [" << subName << "] ")
 						}
 					}
 				}
@@ -1109,7 +1126,7 @@ void CGetAddress(Clb::file& file)
 					B
 						break;
 				case 0x0b:
-					DW
+					LAB
 						break;
 				case 0x0c:
 					break;
@@ -1193,6 +1210,8 @@ void CGetAddress(Clb::file& file)
 					break;
 				case 0x38:
 					break;
+				case 0x39:
+					break;
 				case 0x3a:
 					break;
 				case 0x3b:
@@ -1223,6 +1242,8 @@ void CGetAddress(Clb::file& file)
 				case 0x48:
 					break;
 				case 0x49:
+					break;
+				case 0x4a:
 					break;
 				case 0x4b:
 					break;
@@ -1368,7 +1389,7 @@ void CGetAddress(Clb::file& file)
 				case 0x8e:
 					break;
 				case 0x90:
-					DW
+					SUB
 						break;
 				case 0x91:
 					break;
